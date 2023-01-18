@@ -5,7 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
-
+using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 
 namespace Backend
 {
@@ -17,7 +18,6 @@ namespace Backend
         }
 
         public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
             // Add JWT Authentication
@@ -44,15 +44,18 @@ namespace Backend
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PruebaAgaval", Version = "v1" });
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowMyOrigin",
+                builder => builder.WithOrigins("http://localhost:4200"));
+            });
+
             // Add other services here as needed
             services.AddControllers();
         }
 
-
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -61,7 +64,10 @@ namespace Backend
             app.UseRouting();
 
             app.UseAuthentication();
-            
+
+            app.UseCors("AllowMyOrigin");
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -75,6 +81,7 @@ namespace Backend
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "PruebaAgaval");
             });
         }
+
     }
 }
 
