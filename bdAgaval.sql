@@ -238,6 +238,14 @@ select * from inventario
 GO
 
 
+CREATE PROCEDURE lista_inventario_existentes
+AS   
+select * from inventario
+where cantidad > 0
+GO
+
+
+
 CREATE PROCEDURE inventario_Por_Id
 @id int
 AS   
@@ -385,7 +393,8 @@ CREATE TABLE Item(
     CompraId int null,
 	ClienteId int null
     FOREIGN KEY (CompraId) REFERENCES compras(Id),
-	FOREIGN KEY (ClienteId) REFERENCES clientes(Id)
+	FOREIGN KEY (ClienteId) REFERENCES clientes(Id),
+    FOREIGN KEY (ItemId) REFERENCES inventario(Id)
 )
 
 
@@ -401,14 +410,15 @@ select * from Item
 where Id = @id;
 GO
 
-CREATE PROCEDURE registrar_Item
+CREATE PROCEDURE [dbo].[registrar_Item]
 	@ItemId int null,
     @Descripcion varchar(500) NULL,   
 	@CompraId int null,
     @ClienteId int null
 AS 
 
-insert into Item(ItemId, Descripcion, CompraId, ClienteId) values(@ItemId, @Descripcion, @CompraId, @ClienteId)
+insert into Item(ItemId, Descripcion, CompraId, ClienteId) values(@ItemId, @Descripcion, @CompraId, @ClienteId);
+UPDATE inventario SET cantidad = cantidad - 1 WHERE Id = @ItemId;
 GO
 
 

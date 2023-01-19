@@ -21,6 +21,12 @@ namespace Backend.Controllers
             return Ok(await Task.Run(() => new inventarioDLAC().listainventario()));
             //return Ok(await Task.Run(() => new solicitudDLAC().listado()));
         }
+        [HttpGet("lista")]
+        public async Task<IActionResult> getInventarioExistentes()
+        {
+            return Ok(await Task.Run(() => new inventarioDLAC().listainventarioExistentes()));
+            //    //return Ok(await Task.Run(() => new solicitudDLAC().listado()));
+        }
 
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> getInventarioId(int id)
@@ -28,6 +34,7 @@ namespace Backend.Controllers
             return Ok(await Task.Run(() => new inventarioDLAC().inventarioPorId(id)));
             //    //return Ok(await Task.Run(() => new solicitudDLAC().listado()));
         }
+
 
         [HttpPost("nuevo")]
         public async Task<IActionResult> PostInventario(inventario inventario)

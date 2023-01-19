@@ -29,6 +29,31 @@ namespace web_api_es.DLAC
             }
             return seller;
         }
+
+        public IEnumerable<inventario> listainventarioExistentes()
+        {
+            List<inventario> seller = new List<inventario>();
+            using (SqlConnection cn = new conexionDLAC().getcn)
+            {
+                cn.Open();
+                SqlCommand cmd = new SqlCommand("lista_inventario_existentes", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    seller.Add(new inventario()
+                    {
+                        Id = dr.GetInt32(0),
+                        FechaIngreso = dr.GetDateTime(1),
+                        Cantidad = dr.GetInt32(2),
+                        ValorUnitario = dr.GetInt32(3),
+                        Descripcion = dr.GetString(4)
+                    });
+                }
+            }
+            return seller;
+        }
+
         public IEnumerable<inventario> inventarioPorId(int id)
         {
             List<inventario> seller = new List<inventario>();
