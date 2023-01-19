@@ -15,7 +15,7 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    
     public class UsuariosController:ControllerBase
     {
        [HttpGet("")]
